@@ -1,25 +1,35 @@
+"use client";
+
 import { User } from "@/types/user";
+import { useEffect } from "react";
 import UserCard from "./UserCard";
+import { useUserContext } from "@/context/UserContext";
 
-async function getUsers(): Promise<User[]> {
-  const res = await fetch("https://jsonplaceholder.typicode.com/users", {
-    next: { revalidate: 60 },
-    // cache: "no-store",
-  });
-  if (!res.ok) {
-    throw new Error("Не удалось загрузить пользователей");
-  }
+export default function UserList() {
+  const { users, setUsers } = useUserContext();
 
-  return res.json();
-}
+  useEffect(() => {
+    async function fetchUsers() {
+      const res = await fetch("https://jsonplaceholder.typicode.com/users");
+      const data: User[] = await res.json();
+      setUsers(data);
+    }
 
-export default async function UserList() {
-  const users = await getUsers();
+    if (users.length == 0) {
+      fetchUsers();
+    }
+  }, [users.length, setUsers]);
 
   return (
     <div className="flex flex-col gap-4">
       {users.map((user) => (
-        <UserCard key={user.id} user={user} />
+        <UserCard
+          key={user.id}
+          user={user}
+          onDelete={(id) =>
+            setUsers((prev) => prev.filter((user) => user.id !== id))
+          }
+        />
       ))}
     </div>
   );

@@ -1,11 +1,11 @@
-export interface Address {
+interface Address {
 street: string;
 suite: string;
 city: string;
 zipcode: string;
 }
 
-export interface Company {
+interface Company {
 name: string;
 catchPhrase: string;
 bs: string;

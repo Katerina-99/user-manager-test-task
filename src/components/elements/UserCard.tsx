@@ -11,9 +11,10 @@ import { User } from "@/types/user";
 
 interface UserCardProps {
   user: User;
+  onDelete: (id: number) => void;
 }
 
-export default function UserCard({ user }: UserCardProps) {
+export default function UserCard({ user, onDelete }: UserCardProps) {
   return (
     <Card className="w-full max-w-sm gap-4">
       <CardHeader>
@@ -26,9 +27,13 @@ export default function UserCard({ user }: UserCardProps) {
       </CardContent>
       <CardFooter className="flex-col gap-2">
         <Button className="w-full cursor-pointer" asChild>
-          <Link href="/">Подробнее</Link>
+          <Link href={`/user/${user.id}`}>Подробнее</Link>
         </Button>
-        <Button variant="outline" className="w-full cursor-pointer">
+        <Button
+          variant="outline"
+          className="w-full cursor-pointer"
+          onClick={() => onDelete(user.id)}
+        >
           Удалить
         </Button>
       </CardFooter>
