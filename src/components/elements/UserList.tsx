@@ -6,7 +6,9 @@ import UserCard from "./UserCard";
 import { useUserContext } from "@/context/UserContext";
 
 export default function UserList() {
-  const { users, setUsers } = useUserContext();
+  const { users, setUsers, filteredUsers } = useUserContext();
+  console.log(filteredUsers);
+  console.log(users);
 
   useEffect(() => {
     async function fetchUsers() {
@@ -20,9 +22,13 @@ export default function UserList() {
     }
   }, [users.length, setUsers]);
 
+  if (filteredUsers.length === 0) {
+    return <p>Нет пользователей по заданным критериям.</p>;
+  }
+
   return (
     <div className="flex flex-col gap-4">
-      {users.map((user) => (
+      {filteredUsers.map((user) => (
         <UserCard
           key={user.id}
           user={user}

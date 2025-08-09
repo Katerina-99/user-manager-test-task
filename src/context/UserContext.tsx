@@ -10,6 +10,7 @@ interface UserContextType {
   setSearch: React.Dispatch<React.SetStateAction<string>>;
   companyFilter: string;
   setCompanyFilter: React.Dispatch<React.SetStateAction<string>>;
+  filteredUsers: User[];
 }
 
 const UserContext = createContext<UserContextType>({
@@ -19,6 +20,7 @@ const UserContext = createContext<UserContextType>({
   setSearch: () => {},
   companyFilter: "",
   setCompanyFilter: () => {},
+  filteredUsers: [],
 });
 
 export function UserProvider({
@@ -30,6 +32,19 @@ export function UserProvider({
   const [search, setSearch] = useState("");
   const [companyFilter, setCompanyFilter] = useState("");
 
+  const filteredUsers = users.filter((user) => {
+    const lowerSearch = search.toLowerCase();
+
+    const matchesSearch = user.name.toLowerCase().includes(lowerSearch);
+
+    const matchesCompany =
+      companyFilter === "all" || companyFilter === ""
+        ? true
+        : user.company.name === companyFilter;
+
+    return matchesSearch && matchesCompany;
+  });
+
   return (
     <UserContext.Provider
       value={{
@@ -39,6 +54,7 @@ export function UserProvider({
         setSearch,
         companyFilter,
         setCompanyFilter,
+        filteredUsers,
       }}
     >
       {children}
