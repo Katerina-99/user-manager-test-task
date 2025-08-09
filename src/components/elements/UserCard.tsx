@@ -21,9 +21,18 @@ export default function UserCard({ user, onDelete }: UserCardProps) {
         <CardTitle>Карточка пользователя</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        <h2>{user.name}</h2>
-        <p>{user.email}</p>
-        <p>{user.company.name}</p>
+        <h2>
+          <strong>Имя: </strong>
+          {user.name}
+        </h2>
+        <p>
+          <strong>Email: </strong>
+          {user.email}
+        </p>
+        <p>
+          <strong>Компания: </strong>
+          {user.company.name}
+        </p>
       </CardContent>
       <CardFooter className="flex-col gap-2">
         <Button className="w-full cursor-pointer" asChild>

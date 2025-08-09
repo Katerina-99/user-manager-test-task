@@ -1,6 +1,7 @@
 "use client";
 
-import Link from "next/link";
+import { useUserContext } from "@/context/UserContext";
+import { useParams, useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -9,8 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "../ui/button";
-import { useUserContext } from "@/context/UserContext";
-import { useParams, useRouter } from "next/navigation";
+import EditUserModal from "./EditUserModal";
 
 export default function UserDetailCard() {
   const router = useRouter();
@@ -67,9 +67,7 @@ export default function UserDetailCard() {
         >
           Назад
         </Button>
-        <Button variant="outline" className="w-full cursor-pointer">
-          Редактировать
-        </Button>
+        <EditUserModal />
       </CardFooter>
     </Card>
   );
