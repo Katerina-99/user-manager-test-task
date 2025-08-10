@@ -54,6 +54,20 @@ export default function EditUserModal() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      alert("Введите корректный email.");
+      resetForm();
+      return;
+    }
+
+    if (!/^\+?\d+$/.test(formData.phone)) {
+      alert(
+        "Телефон должен содержать только цифры (и, при необходимости, + в начале)."
+      );
+      resetForm();
+      return;
+    }
+
     setUsers((prev) =>
       prev.map((user) =>
         user.id === userId

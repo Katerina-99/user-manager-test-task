@@ -48,6 +48,18 @@ export default function AddUserModal() {
       return;
     }
 
+    if (!/\S+@\S+\.\S+/.test(newUserValue.email)) {
+      alert("Введите корректный email.");
+      return;
+    }
+
+    if (!/^\+?\d+$/.test(newUserValue.phone)) {
+      alert(
+        "Телефон должен содержать только цифры (и, при необходимости, + в начале)."
+      );
+      return;
+    }
+
     const newUser: User = {
       id: Date.now(),
       name: newUserValue.name,
