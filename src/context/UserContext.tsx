@@ -12,6 +12,8 @@ interface UserContextType {
   setCompanyFilter: React.Dispatch<React.SetStateAction<string>>;
   filteredUsers: User[];
   isLoading: boolean;
+  error: string | null;
+  setError: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const UserContext = createContext<UserContextType>({
@@ -23,6 +25,8 @@ const UserContext = createContext<UserContextType>({
   setCompanyFilter: () => {},
   filteredUsers: [],
   isLoading: true,
+  error: null,
+  setError: () => {},
 });
 
 export function UserProvider({
@@ -34,16 +38,19 @@ export function UserProvider({
   const [search, setSearch] = useState("");
   const [companyFilter, setCompanyFilter] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchUsers() {
       setIsLoading(true);
       try {
         const res = await fetch("https://jsonplaceholder.typicode.com/users");
+        if (!res.ok)
+          throw new Error("Ошибка сети: не удалось загрузить пользователей");
         const data: User[] = await res.json();
         setUsers(data);
       } catch (err) {
-        console.error(err);
+        setError(err instanceof Error ? err.message : "Неизвестная ошибка");
       } finally {
         setIsLoading(false);
       }
@@ -78,6 +85,8 @@ export function UserProvider({
         setCompanyFilter,
         filteredUsers,
         isLoading,
+        error,
+        setError,
       }}
     >
       {children}

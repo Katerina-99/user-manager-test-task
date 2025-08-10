@@ -3,9 +3,21 @@
 import UserCard from "./UserCard";
 import { useUserContext } from "@/context/UserContext";
 import { Skeleton } from "@/components/ui/skeleton";
+import ErrorCard from "./ErrorCard";
 
 export default function UserList() {
-  const { setUsers, filteredUsers, isLoading } = useUserContext();
+  const { setUsers, filteredUsers, isLoading, error } = useUserContext();
+
+  if (error) {
+    return (
+      <ErrorCard
+        message={error}
+        onRetry={() => {
+          setUsers([]);
+        }}
+      />
+    );
+  }
 
   if (isLoading) {
     return (
@@ -13,7 +25,6 @@ export default function UserList() {
         {[...Array(6)].map((item, index) => (
           <div
             key={index}
-            // className="p-4 border rounded-md shadow animate-pulse"
             className="p-8 border border-gray-300 rounded-lg shadow-md bg-white"
           >
             <Skeleton className="h-8 w-60 mb-4 rounded-md" />
