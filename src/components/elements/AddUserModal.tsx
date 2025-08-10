@@ -13,18 +13,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useUserContext } from "@/context/UserContext";
-import { useParams } from "next/navigation";
+import { User } from "@/types/user";
 
-export default function EditUserModal() {
-  const { id } = useParams();
-  const userId = Number(id);
-
-  const { users, setUsers } = useUserContext();
-  const user = users.find((user) => user.id === userId);
-
-  const [formData, setFormData] = useState({
+export default function AddUserModal() {
+  const { setUsers } = useUserContext();
+  const [newUserValue, setNewUserValue] = useState({
     name: "",
     username: "",
     email: "",
@@ -33,75 +28,79 @@ export default function EditUserModal() {
     company: "",
   });
 
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        phone: user.phone,
-        website: user.website,
-        company: user.company.name,
-      });
-    }
-  }, [user]);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setNewUserValue((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    setUsers((prev) =>
-      prev.map((user) =>
-        user.id === userId
-          ? {
-              ...user,
-              name: formData.name,
-              username: formData.username,
-              email: formData.email,
-              phone: formData.phone,
-              website: formData.website,
-              company: {
-                ...user.company,
-                name: formData.company,
-              },
-              address: user.address,
-            }
-          : user
-      )
-    );
-  };
-
-  const resetForm = () => {
-    if (user) {
-      setFormData({
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        phone: user.phone,
-        website: user.website,
-        company: user.company.name,
-      });
+    if (
+      !newUserValue.name.trim() ||
+      !newUserValue.username.trim() ||
+      !newUserValue.email.trim() ||
+      !newUserValue.phone.trim() ||
+      !newUserValue.website.trim() ||
+      !newUserValue.company.trim()
+    ) {
+      alert("Пожалуйста, заполните все обязательные поля.");
+      return;
     }
+
+    const newUser: User = {
+      id: Date.now(),
+      name: newUserValue.name,
+      username: newUserValue.username,
+      email: newUserValue.email,
+      phone: newUserValue.phone,
+      website: newUserValue.website,
+      company: { name: newUserValue.company, catchPhrase: "", bs: "" },
+      address: {
+        street: "",
+        suite: "",
+        city: "",
+        zipcode: "",
+      },
+    };
+
+    setUsers((prev) => [...prev, newUser]);
+    resetInputs();
   };
 
-  if (!user) return null;
+  const resetInputs = () => {
+    setNewUserValue({
+      name: "",
+      username: "",
+      email: "",
+      phone: "",
+      website: "",
+      company: "",
+    });
+  };
+
+  const isFormValid =
+    newUserValue.name.trim() &&
+    newUserValue.username.trim() &&
+    newUserValue.email.trim() &&
+    newUserValue.phone.trim() &&
+    newUserValue.website.trim() &&
+    newUserValue.company.trim();
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full cursor-pointer">
-          Редактировать
+        <Button variant="outline" className="cursor-pointer">
+          Добавить пользователя
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Редактировать карточку</DialogTitle>
-            <DialogDescription>Измените данные и сохраните</DialogDescription>
+            <DialogTitle>Добавить пользователя</DialogTitle>
+            <DialogDescription>
+              Заполните все поля и сохраните
+            </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 mb-2">
             <div className="grid gap-1">
@@ -109,7 +108,7 @@ export default function EditUserModal() {
               <Input
                 id="name"
                 name="name"
-                value={formData.name}
+                value={newUserValue.name}
                 onChange={handleChange}
               />
             </div>
@@ -118,7 +117,7 @@ export default function EditUserModal() {
               <Input
                 id="username"
                 name="username"
-                value={formData.username}
+                value={newUserValue.username}
                 onChange={handleChange}
               />
             </div>
@@ -127,7 +126,7 @@ export default function EditUserModal() {
               <Input
                 id="email"
                 name="email"
-                value={formData.email}
+                value={newUserValue.email}
                 onChange={handleChange}
               />
             </div>
@@ -136,7 +135,7 @@ export default function EditUserModal() {
               <Input
                 id="phone"
                 name="phone"
-                value={formData.phone}
+                value={newUserValue.phone}
                 onChange={handleChange}
               />
             </div>
@@ -145,7 +144,7 @@ export default function EditUserModal() {
               <Input
                 id="website"
                 name="website"
-                value={formData.website}
+                value={newUserValue.website}
                 onChange={handleChange}
               />
             </div>
@@ -154,19 +153,21 @@ export default function EditUserModal() {
               <Input
                 id="company"
                 name="company"
-                value={formData.company}
+                value={newUserValue.company}
                 onChange={handleChange}
               />
             </div>
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline" onClick={resetForm}>
+              <Button variant="outline" onClick={resetInputs}>
                 Закрыть
               </Button>
             </DialogClose>
             <DialogClose asChild>
-              <Button type="submit">Сохранить изменения</Button>
+              <Button type="submit" disabled={!isFormValid}>
+                Добавить
+              </Button>
             </DialogClose>
           </DialogFooter>
         </form>

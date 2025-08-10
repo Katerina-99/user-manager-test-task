@@ -1,7 +1,6 @@
 "use client";
 
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
 import {
   Select,
   SelectContent,
@@ -12,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useUserContext } from "@/context/UserContext";
+import AddUserModal from "./AddUserModal";
 
 export default function Header() {
   const { users, search, setSearch, companyFilter, setCompanyFilter } =
@@ -25,7 +25,7 @@ export default function Header() {
   });
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 flex-wrap justify-center px-10 sm:flex-nowrap">
       <Input
         placeholder="Поиск по имени..."
         value={search}
@@ -36,7 +36,7 @@ export default function Header() {
         value={companyFilter}
         onValueChange={(value) => setCompanyFilter(value)}
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger>
           <SelectValue placeholder="Выбери компанию" />
         </SelectTrigger>
         <SelectContent>
@@ -52,9 +52,11 @@ export default function Header() {
         </SelectContent>
       </Select>
 
-      <Button onClick={() => console.log("Открывается модалка")}>
+      <AddUserModal />
+
+      {/* <Button onClick={() => console.log("Открывается модалка")}>
         Добавить пользователя
-      </Button>
+      </Button> */}
     </div>
   );
 }

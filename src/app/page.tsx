@@ -4,7 +4,7 @@ import UserList from "@/components/elements/UserList";
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[60px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-2 sm:p-10">
+    <div className="font-sans grid grid-rows-[1fr_auto_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-3 sm:p-10">
       <header className="row-start-1">
         <Header />
       </header>
