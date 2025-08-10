@@ -53,10 +53,6 @@ export default function Header() {
       </Select>
 
       <AddUserModal />
-
-      {/* <Button onClick={() => console.log("Открывается модалка")}>
-        Добавить пользователя
-      </Button> */}
     </div>
   );
 }

@@ -1,4 +1,3 @@
-// import Image from "next/image";
 import Header from "@/components/elements/Header";
 import UserList from "@/components/elements/UserList";
 
