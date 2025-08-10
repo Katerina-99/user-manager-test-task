@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { User } from "@/types/user";
 
 interface UserContextType {
@@ -11,6 +11,7 @@ interface UserContextType {
   companyFilter: string;
   setCompanyFilter: React.Dispatch<React.SetStateAction<string>>;
   filteredUsers: User[];
+  isLoading: boolean;
 }
 
 const UserContext = createContext<UserContextType>({
@@ -21,6 +22,7 @@ const UserContext = createContext<UserContextType>({
   companyFilter: "",
   setCompanyFilter: () => {},
   filteredUsers: [],
+  isLoading: true,
 });
 
 export function UserProvider({
@@ -31,6 +33,26 @@ export function UserProvider({
   const [users, setUsers] = useState<User[]>([]);
   const [search, setSearch] = useState("");
   const [companyFilter, setCompanyFilter] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchUsers() {
+      setIsLoading(true);
+      try {
+        const res = await fetch("https://jsonplaceholder.typicode.com/users");
+        const data: User[] = await res.json();
+        setUsers(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    if (users.length == 0) {
+      fetchUsers();
+    }
+  }, [users.length, setUsers]);
 
   const filteredUsers = users.filter((user) => {
     const lowerSearch = search.toLowerCase();
@@ -55,6 +77,7 @@ export function UserProvider({
         companyFilter,
         setCompanyFilter,
         filteredUsers,
+        isLoading,
       }}
     >
       {children}

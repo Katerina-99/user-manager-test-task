@@ -1,33 +1,39 @@
 "use client";
 
-import { User } from "@/types/user";
-import { useEffect } from "react";
 import UserCard from "./UserCard";
 import { useUserContext } from "@/context/UserContext";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function UserList() {
-  const { users, setUsers, filteredUsers } = useUserContext();
-  console.log(filteredUsers);
-  console.log(users);
+  const { setUsers, filteredUsers, isLoading } = useUserContext();
 
-  useEffect(() => {
-    async function fetchUsers() {
-      const res = await fetch("https://jsonplaceholder.typicode.com/users");
-      const data: User[] = await res.json();
-      setUsers(data);
-    }
-
-    if (users.length == 0) {
-      fetchUsers();
-    }
-  }, [users.length, setUsers]);
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-4 w-full max-w-sm">
+        {[...Array(6)].map((item, index) => (
+          <div
+            key={index}
+            // className="p-4 border rounded-md shadow animate-pulse"
+            className="p-8 border border-gray-300 rounded-lg shadow-md bg-white"
+          >
+            <Skeleton className="h-8 w-60 mb-4 rounded-md" />
+            <Skeleton className="h-4 w-34 mb-2 rounded-md" />
+            <Skeleton className="h-4 w-42 mb-2 rounded-md" />
+            <Skeleton className="h-4 w-26 mb-4 rounded-md" />
+            <Skeleton className="h-9 w-60 mb-2 rounded-md" />
+            <Skeleton className="h-9 w-60 rounded-md" />
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   if (filteredUsers.length === 0) {
     return <p>Нет пользователей по заданным критериям.</p>;
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
       {filteredUsers.map((user) => (
         <UserCard
           key={user.id}
