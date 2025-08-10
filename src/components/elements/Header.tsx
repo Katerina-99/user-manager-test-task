@@ -25,7 +25,7 @@ export default function Header() {
   });
 
   return (
-    <div className="flex gap-2 flex-wrap justify-center px-10 sm:flex-nowrap">
+    <div className="flex gap-3 flex-wrap justify-center px-10 sm:flex-nowrap">
       <Input
         placeholder="Поиск по имени..."
         value={search}

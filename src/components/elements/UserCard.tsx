@@ -16,7 +16,7 @@ interface UserCardProps {
 
 export default function UserCard({ user, onDelete }: UserCardProps) {
   return (
-    <Card className="w-full min-w-xs max-w-sm gap-4">
+    <Card className="w-full min-w-xs max-w-sm gap-4 md:flex-1">
       <CardHeader>
         <CardTitle>Карточка пользователя</CardTitle>
       </CardHeader>

@@ -26,7 +26,7 @@ export default function UserDetailCard() {
   }
 
   return (
-    <Card className="w-full max-w-sm gap-4 p-4">
+    <Card className="w-full max-w-sm gap-4 p-4 lg:max-w-lg lg:p-6 lg:py-10">
       <CardHeader>
         <CardTitle>Карточка пользователя</CardTitle>
       </CardHeader>
